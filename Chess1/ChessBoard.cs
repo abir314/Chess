@@ -224,20 +224,14 @@ public class ChessBoard
 
     public void MarkLegalNextMoves(BoardTile currentTile, int playerNumber, bool checkingKingsPossibleMoves)
     {
-        for (int i = 0; i < Size; i++)
-        {
-            for (int j = 0; j < Size; j++)
-            {
-                Tiles[i, j].LegalNextMove = false;
-            }
-        }
-
+        if(!checkingKingsPossibleMoves) SetLegalMovesToFalse();
         ChessPiece currentPiece;
         NoLegalMoves = false;
 
         if (playerNumber == 1)
         {
             currentPiece = Player1Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
+            currentPiece.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
             switch (currentTile.TilePiece.Piece)
             {
                 case "N1":
@@ -245,42 +239,42 @@ public class ChessBoard
                     
                     if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1));
                     }
                     if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1));
                     } 
                     if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1));
                     }
                     if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1));
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber + 2));
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber -2));
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 2));
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -2));
                     }
                     bool checkKnight = false;
@@ -302,7 +296,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -314,7 +308,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -326,7 +320,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber - 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -338,7 +332,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 0));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 0],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber + 0,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 0].LegalNextMove = true;
@@ -350,7 +344,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -362,7 +356,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -374,7 +368,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 0));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 0],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber + 0,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 0].LegalNextMove = true;
@@ -386,7 +380,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -414,7 +408,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
                             
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i+1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -427,7 +421,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i-1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i-1].TilePiece, playerNumber)) break;
@@ -441,7 +435,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                             
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -454,7 +448,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i-1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i-1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -482,7 +476,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -494,7 +488,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -506,7 +500,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -518,7 +512,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -545,7 +539,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -557,7 +551,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -569,7 +563,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -581,7 +575,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -593,7 +587,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
                             
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i+1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -606,7 +600,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i-1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i-1].TilePiece, playerNumber)) break;
@@ -620,7 +614,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                             
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -633,7 +627,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i-1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i-1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -663,25 +657,25 @@ public class ChessBoard
                     
                     if (IsSafe(currentTile.RowNumber +2, currentTile.ColumnNumber +0) && currentTile.TilePiece.MoveCount == 0 && Tiles[currentTile.RowNumber +2, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
                     {
-                        Tiles[currentTile.RowNumber +2, currentTile.ColumnNumber +0].LegalNextMove = true;
-                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +2, currentTile.ColumnNumber +0));
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +2, currentTile.ColumnNumber +0].LegalNextMove = true;
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +2, currentTile.ColumnNumber +0));
 
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +0) && Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].LegalNextMove = true;
-                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber +0));
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].LegalNextMove = true;
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber +0));
 
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1].TilePiece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber +1));
 
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1].TilePiece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
                     }
                     bool checkPawn = false;
@@ -703,6 +697,7 @@ public class ChessBoard
         if (playerNumber == 2)
         {
             currentPiece = Player2Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
+            currentPiece.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
             switch (currentTile.TilePiece.Piece)
             {
                 case "n1":
@@ -710,42 +705,42 @@ public class ChessBoard
                     
                     if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1));
                     }
                     if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1));
                     } 
                     if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1));
                     }
                     if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1));
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber + 2));
                     }
                     if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber -2));
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 2));
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -2));
                     }
                     bool checkKnight = false;
@@ -767,7 +762,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -779,7 +774,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -791,7 +786,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber - 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -803,7 +798,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 0));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 0],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber + 0,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 0].LegalNextMove = true;
@@ -815,7 +810,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber - 1, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber - 1, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -827,7 +822,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber + 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 1].LegalNextMove = true;
@@ -839,7 +834,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 0));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 0],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber + 0,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber + 0].LegalNextMove = true;
@@ -851,7 +846,7 @@ public class ChessBoard
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
                         if (!checkingKingsPossibleMoves)
                         {
-                            if (CheckIfWillNotGetChecked(Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber - 1],
+                            if (CheckIfWillNotGetChecked(currentTile.RowNumber + 1, currentTile.ColumnNumber - 1,
                                     playerNumber))
                             {
                                 Tiles[currentTile.RowNumber + 1, currentTile.ColumnNumber - 1].LegalNextMove = true;
@@ -879,7 +874,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
                             
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i+1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -892,7 +887,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i-1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i-1].TilePiece, playerNumber)) break;
@@ -906,7 +901,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                             
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -919,7 +914,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i-1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i-1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -947,7 +942,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -959,7 +954,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -971,7 +966,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -983,7 +978,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -1010,7 +1005,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -1022,7 +1017,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -1034,7 +1029,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber - i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber -i-1].TilePiece, playerNumber)) break;
@@ -1046,7 +1041,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i-1, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -1058,7 +1053,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
                             
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i+1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i+1].TilePiece, playerNumber)) break;
@@ -1071,7 +1066,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber + i].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
 
                             if(IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + (i-1)) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i-1].TilePiece, playerNumber)) break;
@@ -1085,7 +1080,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                             
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i+1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i+1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -1098,7 +1093,7 @@ public class ChessBoard
                         {
                             if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
                         
-                            Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
+                            if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber + 0].LegalNextMove = true;
                             currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
 
                             if(IsSafe(currentTile.RowNumber +i-1, currentTile.ColumnNumber + 0) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i-1, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
@@ -1128,25 +1123,25 @@ public class ChessBoard
                     
                     if (IsSafe(currentTile.RowNumber -2, currentTile.ColumnNumber +0) && currentTile.TilePiece.MoveCount == 0 && Tiles[currentTile.RowNumber -2, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
                     {
-                        Tiles[currentTile.RowNumber -2, currentTile.ColumnNumber +0].LegalNextMove = true;
-                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -2, currentTile.ColumnNumber +0));
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -2, currentTile.ColumnNumber +0].LegalNextMove = true;
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -2, currentTile.ColumnNumber +0));
 
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +0) && Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].LegalNextMove = true;
-                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber +0));
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].LegalNextMove = true;
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber +0));
 
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1].TilePiece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber +1));
 
                     }
                     if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -1) && CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -1].TilePiece, playerNumber))
                     {
-                        Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -1].LegalNextMove = true;
+                        if(!checkingKingsPossibleMoves) Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -1].LegalNextMove = true;
                         currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -1));
                     }
                     bool checkPawn = false;
@@ -1166,7 +1161,7 @@ public class ChessBoard
         }
     }
 
-    private bool CheckIfWillNotGetChecked(BoardTile tile, int playersKing)
+    private bool CheckIfWillNotGetChecked(int row,int column, int playersKing)
     {
         int playerNumber;
         if (playersKing == 1)
@@ -1179,12 +1174,11 @@ public class ChessBoard
 
             foreach (var player2Piece in Player2Pieces)
             {
-                if (player2Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == tile.RowNumber && boardTile.ColumnNumber == tile.ColumnNumber))
+                if (player2Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == row && boardTile.ColumnNumber == column))
                 {
                     return false;
                 }
             }
-            return true;
         }
         
         if (playersKing == 2)
@@ -1197,7 +1191,7 @@ public class ChessBoard
 
             foreach (var player1Piece in Player1Pieces)
             {
-                if (player1Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == tile.RowNumber && boardTile.ColumnNumber == tile.ColumnNumber))
+                if (player1Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == row && boardTile.ColumnNumber == column))
                 {
                     return false;
                 }

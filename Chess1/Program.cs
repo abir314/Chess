@@ -96,6 +96,9 @@ class Program
                 var pieceToMoveTo = myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece;
                 myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
                 myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
+                var player1PieceToMove = myBoard.Player1Pieces.FirstOrDefault(p => p.Piece == pieceToMove.Piece);
+                player1PieceToMove.CurrentRow = rowToMoveTo;
+                player1PieceToMove.CurrentColumn = columnToMoveTo;
                 if (CheckToCapturePiece(myBoard, pieceToMoveTo, playerNumber))
                 {
                     myBoard.Player2Pieces = myBoard.Player2Pieces.Where(s => s.Piece != pieceToMoveTo.Piece).ToArray();
@@ -185,6 +188,9 @@ class Program
                 var pieceToMoveTo = myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece;
                 myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
                 myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
+                var player2PieceToMove = myBoard.Player2Pieces.FirstOrDefault(p => p.Piece == pieceToMove.Piece);
+                player2PieceToMove.CurrentRow = rowToMoveTo;
+                player2PieceToMove.CurrentColumn = columnToMoveTo;
                 if (CheckToCapturePiece(myBoard, pieceToMoveTo, playerNumber))
                 {
                     myBoard.Player1Pieces = myBoard.Player1Pieces.Where(s => s.Piece != pieceToMoveTo.Piece).ToArray();
