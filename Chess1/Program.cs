@@ -38,7 +38,7 @@ class Program
                     Console.WriteLine("Choose a piece -");
                     var userChoice = Console.ReadLine();
                     if (userChoice.Length > 0 && userChoice.Length < 3 && (userChoice.Length == 2
-                            ? (("PRNBQK").Contains(char.ToUpper(userChoice[0])) && ("12345678").Contains(userChoice[1]))
+                            ? (("PRNB").Contains(char.ToUpper(userChoice[0])) && ("12345678").Contains(userChoice[1]))
                             : ("QK").Contains(char.ToUpper(userChoice[0]))))
                     {
                         for (int i = 0; i < myBoard.Size; i++)
@@ -94,8 +94,8 @@ class Program
                 myBoard.Tiles[row, column].TilePiece.MoveCount++;
                 var pieceToMove = myBoard.Tiles[row, column].TilePiece;
                 var pieceToMoveTo = myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece;
-                myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
-                myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
+                // myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
+                // myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
                 var player1PieceToMove = myBoard.Player1Pieces.FirstOrDefault(p => p.Piece == pieceToMove.Piece);
                 player1PieceToMove.CurrentRow = rowToMoveTo;
                 player1PieceToMove.CurrentColumn = columnToMoveTo;
@@ -103,13 +103,15 @@ class Program
                 {
                     myBoard.Player2Pieces = myBoard.Player2Pieces.Where(s => s.Piece != pieceToMoveTo.Piece).ToArray();
                     myBoard.Player1WonPieces.Add(pieceToMoveTo.Piece);
-                    myBoard.Tiles[row, column].TilePiece = myBoard.TileSpace;
-                    myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece = pieceToMove;
+
                 }
-                else
-                {
-                    (myBoard.Tiles[row, column].TilePiece, myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece) = (myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece, myBoard.Tiles[row, column].TilePiece);
-                }
+                // else
+                // {
+                //     (myBoard.Tiles[row, column].TilePiece, myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece) = (myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece, myBoard.Tiles[row, column].TilePiece);
+                // }
+                myBoard.Tiles[row, column].TilePiece = myBoard.TileSpace;
+                myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece = pieceToMove;
+                
                 myBoard.Print();
             }
 
@@ -130,7 +132,7 @@ class Program
                     Console.WriteLine("Choose a piece -");
                     var userChoice = Console.ReadLine();
                     if (userChoice.Length > 0 && userChoice.Length < 3 && (userChoice.Length == 2
-                            ? (("prnbqk").Contains(char.ToLower(userChoice[0])) && ("12345678").Contains(userChoice[1]))
+                            ? (("prnb").Contains(char.ToLower(userChoice[0])) && ("12345678").Contains(userChoice[1]))
                             : ("qk").Contains(char.ToLower(userChoice[0]))))
                     {
                         for (int i = 0; i < myBoard.Size; i++)
@@ -186,8 +188,8 @@ class Program
                 myBoard.Tiles[row, column].TilePiece.MoveCount++;
                 var pieceToMove = myBoard.Tiles[row, column].TilePiece;
                 var pieceToMoveTo = myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece;
-                myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
-                myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
+                // myBoard.Tiles[row, column].TilePiece.CurrentRow = rowToMoveTo;
+                // myBoard.Tiles[row, column].TilePiece.CurrentColumn = columnToMoveTo;
                 var player2PieceToMove = myBoard.Player2Pieces.FirstOrDefault(p => p.Piece == pieceToMove.Piece);
                 player2PieceToMove.CurrentRow = rowToMoveTo;
                 player2PieceToMove.CurrentColumn = columnToMoveTo;
@@ -195,19 +197,19 @@ class Program
                 {
                     myBoard.Player1Pieces = myBoard.Player1Pieces.Where(s => s.Piece != pieceToMoveTo.Piece).ToArray();
                     myBoard.Player2WonPieces.Add(pieceToMoveTo.Piece);
-                    myBoard.Tiles[row, column].TilePiece = myBoard.TileSpace;
-                    myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece = pieceToMove;
                 }
-                else
-                {
-                    (myBoard.Tiles[row, column].TilePiece, myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece) = (myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece, myBoard.Tiles[row, column].TilePiece);
-                }
+                // else
+                // {
+                //     (myBoard.Tiles[row, column].TilePiece, myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece) = (myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece, myBoard.Tiles[row, column].TilePiece);
+                // }
+                myBoard.Tiles[row, column].TilePiece = myBoard.TileSpace;
+                myBoard.Tiles[rowToMoveTo, columnToMoveTo].TilePiece = pieceToMove;
+                
                 myBoard.Print();
             }
 
             roundCount++;
-            var winner = "";
-            winnerFound = Findwinner(myBoard, out winner);
+            winnerFound = Findwinner(myBoard, out var winner);
             if (winnerFound)
             {
                 Console.WriteLine($"Game over and the winner is {winner}");

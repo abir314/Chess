@@ -225,13 +225,13 @@ public class ChessBoard
     public void MarkLegalNextMoves(BoardTile currentTile, int playerNumber, bool checkingKingsPossibleMoves)
     {
         if(!checkingKingsPossibleMoves) SetLegalMovesToFalse();
-        ChessPiece currentPiece;
+        ChessPiece? currentPiece;
         NoLegalMoves = false;
 
         if (playerNumber == 1)
         {
             currentPiece = Player1Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
-            currentPiece.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
+            currentPiece!.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
             switch (currentTile.TilePiece.Piece)
             {
                 case "N1":
@@ -697,7 +697,7 @@ public class ChessBoard
         if (playerNumber == 2)
         {
             currentPiece = Player2Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
-            currentPiece.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
+            currentPiece!.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
             switch (currentTile.TilePiece.Piece)
             {
                 case "n1":
@@ -1163,38 +1163,62 @@ public class ChessBoard
 
     private bool CheckIfWillNotGetChecked(int row,int column, int playersKing)
     {
-        int playerNumber;
-        if (playersKing == 1)
+        int playerNo;
+        switch (playersKing)
         {
-            playerNumber = 2;
-            foreach (var player2Piece in Player2Pieces)
+            case 1:
             {
-               MarkLegalNextMoves(Tiles[player2Piece.CurrentRow, player2Piece.CurrentColumn], playerNumber, true); 
-            }
-
-            foreach (var player2Piece in Player2Pieces)
-            {
-                if (player2Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == row && boardTile.ColumnNumber == column))
+                playerNo = 2;
+                foreach (var player2Piece in Player2Pieces)
                 {
-                    return false;
+                    for (int i = 0; i < Size; i++)
+                    {
+                        for (int j = 0; j < Size; j++)
+                        {
+                            if (Tiles[i, j].TilePiece.Piece == player2Piece.Piece)
+                            {
+                                KingsNextMoves(Tiles[i,j], playerNo, true);
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        
-        if (playersKing == 2)
-        {
-            playerNumber = 1;
-            foreach (var player1Piece in Player1Pieces)
-            {
-               MarkLegalNextMoves(Tiles[player1Piece.CurrentRow, player1Piece.CurrentColumn], playerNumber, true); 
-            }
 
-            foreach (var player1Piece in Player1Pieces)
-            {
-                if (player1Piece.ListOfTilesThatItCanMoveTo.Any(boardTile => boardTile.RowNumber == row && boardTile.ColumnNumber == column))
+                foreach (var player2Piece in Player2Pieces)
                 {
-                    return false;
+                    foreach (var boardTile in player2Piece.ListOfTilesThatItCanMoveTo)
+                    {
+                        if (boardTile.RowNumber == row && boardTile.ColumnNumber == column) return false;
+                    }
                 }
+
+                break;
+            }
+            case 2:
+            {
+                playerNo = 1;
+                foreach (var player1Piece in Player1Pieces)
+                {
+                    for (int i = 0; i < Size; i++)
+                    {
+                        for (int j = 0; j < Size; j++)
+                        {
+                            if (Tiles[i, j].TilePiece.Piece == player1Piece.Piece)
+                            {
+                                KingsNextMoves(Tiles[i,j], playerNo, true);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var player1Piece in Player1Pieces)
+                {
+                    foreach (var boardTile in player1Piece.ListOfTilesThatItCanMoveTo)
+                    {
+                        if (boardTile.RowNumber == row && boardTile.ColumnNumber == column) return false;
+                    }
+                }
+
+                break;
             }
         }
         return true;
@@ -1202,19 +1226,25 @@ public class ChessBoard
 
     private bool CheckIfContainsOpponentsPiece(ChessPiece tilePiece, int playerNumber)
     {
-        if (playerNumber == 1)
+        switch (playerNumber)
         {
-            foreach (var player2Piece in Player2Pieces)
+            case 1:
             {
-                if (player2Piece.Piece == tilePiece.Piece) return true;
-            }
-        }
+                foreach (var player2Piece in Player2Pieces)
+                {
+                    if (player2Piece.Piece == tilePiece.Piece) return true;
+                }
 
-        if (playerNumber == 2)
-        {
-            foreach (var player1Piece in Player1Pieces)
+                break;
+            }
+            case 2:
             {
-                if (player1Piece.Piece == tilePiece.Piece) return true;
+                foreach (var player1Piece in Player1Pieces)
+                {
+                    if (player1Piece.Piece == tilePiece.Piece) return true;
+                }
+
+                break;
             }
         }
 
@@ -1223,18 +1253,25 @@ public class ChessBoard
 
     private bool CheckIfDoesNotContainsSamePlayersPiece(string currentLocationPiece, int playerNumber)
     {
-        if (playerNumber == 1)
+        switch (playerNumber)
         {
-            foreach (var player1Piece in Player1Pieces)
+            case 1:
             {
-                if (player1Piece.Piece == currentLocationPiece) return false;
+                foreach (var player1Piece in Player1Pieces)
+                {
+                    if (player1Piece.Piece == currentLocationPiece) return false;
+                }
+
+                break;
             }
-        }
-        if (playerNumber == 2)
-        {
-            foreach (var player2Piece in Player2Pieces)
+            case 2:
             {
-                if (player2Piece.Piece == currentLocationPiece) return false;
+                foreach (var player2Piece in Player2Pieces)
+                {
+                    if (player2Piece.Piece == currentLocationPiece) return false;
+                }
+
+                break;
             }
         }
 
@@ -1255,5 +1292,712 @@ public class ChessBoard
                 Tiles[i, j].IsSelected = false;
             }
         }
+    }
+    
+    public void KingsNextMoves(BoardTile currentTile, int playerNumber, bool checkingKingsPossibleMoves)
+    {
+
+        ChessPiece? currentPiece;
+
+        if (playerNumber == 1)
+        {
+            currentPiece = Player1Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
+            currentPiece!.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
+            switch (currentTile.TilePiece.Piece)
+            {
+                case "N1":
+                case "N2":
+                    
+                    if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1));
+                    } 
+                    if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber + 2));
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber -2));
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 2));
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -2));
+                    }
+
+                    break;
+                
+                case " K":
+                    
+                    if (IsSafe(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber - 1));
+                       
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber +0) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 0));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber +1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +0) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 0));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
+                        
+                    }
+
+                    break;
+                
+                case "R1":
+                case "R2":
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+                            
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                        
+                    }
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                            
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    
+                    
+                    
+                    break;
+                
+                case "B1":
+                case "B2":
+                    
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    break;
+                
+                case " Q":
+                    
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+                            
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                        
+                    }
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                            
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    break;
+                
+                case "P1":
+                case "P2":
+                case "P3":
+                case "P4":
+                case "P5":
+                case "P6":
+                case "P7":
+                case "P8":
+                    
+                    if (IsSafe(currentTile.RowNumber +2, currentTile.ColumnNumber +0) && currentTile.TilePiece.MoveCount == 0 && Tiles[currentTile.RowNumber +2, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
+                    {
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +2, currentTile.ColumnNumber +0));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +0) && Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
+                    {
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber +0));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +1) && CheckIfOpponentsKingCanNotMoveHere(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1], playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber +1));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -1) && CheckIfOpponentsKingCanNotMoveHere(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1], playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
+                    }
+                    
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+        
+        if (playerNumber == 2)
+        {
+            currentPiece = Player2Pieces.FirstOrDefault(p => p.Piece == currentTile.TilePiece.Piece);
+            currentPiece!.ListOfTilesThatItCanMoveTo = new List<BoardTile>();
+            switch (currentTile.TilePiece.Piece)
+            {
+                case "n1":
+                case "n2":
+                    
+                    if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber + 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 2, currentTile.ColumnNumber - 1));
+                    } 
+                    if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber + 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber - 2, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber - 2, currentTile.ColumnNumber - 1));
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber + 2));
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 1, currentTile.ColumnNumber -2));
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 2));
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -2) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -2].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -2));
+                    }
+
+                    break;
+                
+                case " k":
+                    
+                    if (IsSafe(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber + 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber + 1));
+                       
+                    }
+                    if (IsSafe(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber + 0, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber + 0, currentTile.ColumnNumber - 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber - 1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber - 1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber - 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber +0) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 0));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber - 1, currentTile.ColumnNumber +1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber + 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 1));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber +0) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber + 0));
+                        
+                    }
+                    if (IsSafe(currentTile.RowNumber +1, currentTile.ColumnNumber -1) && CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +1, currentTile.ColumnNumber -1].TilePiece.Piece, playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +1, currentTile.ColumnNumber -1));
+                        
+                    }
+                    
+                    break;
+                
+                case "r1":
+                case "r2":
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+                            
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                        
+                    }
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                            
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    
+                    break;
+                
+                case "b1":
+                case "b2":
+                    
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    
+                    break;
+                
+                case " q":
+                    
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber - i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber -i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber -i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (int i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber -i, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -i, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber -i, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+                            
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +0, currentTile.ColumnNumber + i))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +0, currentTile.ColumnNumber +i));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +0, currentTile.ColumnNumber +i].TilePiece, playerNumber)) break;
+                        }
+                        
+                    }
+                    
+                    for (var i = 1; i < Size; i++)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                            
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+
+                    for (int i = -1; i > -Size; i--)
+                    {
+                        if (IsSafe(currentTile.RowNumber +i, currentTile.ColumnNumber + 0))
+                        {
+                            if(!CheckIfDoesNotContainsSamePlayersPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece.Piece, playerNumber)) break;
+                        
+                            currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber +i, currentTile.ColumnNumber +0));
+
+                            if(CheckIfContainsOpponentsPiece(Tiles[currentTile.RowNumber +i, currentTile.ColumnNumber +0].TilePiece, playerNumber)) break;
+                        }
+                    }
+                   
+                    break;
+                
+                case "p1":
+                case "p2":
+                case "p3":
+                case "p4":
+                case "p5":
+                case "p6":
+                case "p7":
+                case "p8":
+                    
+                    if (IsSafe(currentTile.RowNumber -2, currentTile.ColumnNumber +0) && currentTile.TilePiece.MoveCount == 0 && Tiles[currentTile.RowNumber -2, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
+                    {
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -2, currentTile.ColumnNumber +0));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +0) && Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +0].TilePiece.Piece == TileSpace.Piece)
+                    {
+                        // currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber +0));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber +1) && CheckIfOpponentsKingCanNotMoveHere(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber +1], playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber +1));
+
+                    }
+                    if (IsSafe(currentTile.RowNumber -1, currentTile.ColumnNumber -1) && CheckIfOpponentsKingCanNotMoveHere(Tiles[currentTile.RowNumber -1, currentTile.ColumnNumber -1], playerNumber))
+                    {
+                        currentPiece?.ListOfTilesThatItCanMoveTo.Add(new BoardTile(currentTile.RowNumber -1, currentTile.ColumnNumber -1));
+                    }
+                    
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+    }
+
+    private bool CheckIfOpponentsKingCanNotMoveHere(BoardTile tile, int playerNumber)
+    {
+        if (playerNumber == 1)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (Tiles[i, j].TilePiece.Piece == " k")
+                    {
+                        if (i - 1 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i - 1 == tile.RowNumber && j + 0 == tile.ColumnNumber) return true;
+                        if (i - 1 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                        if (i + 0 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i + 0 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j + 0 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                    }
+                }
+            }
+        }
+        
+        else if (playerNumber == 2)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    if (Tiles[i, j].TilePiece.Piece == " K")
+                    {
+                        if (i - 1 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i - 1 == tile.RowNumber && j + 0 == tile.ColumnNumber) return true;
+                        if (i - 1 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                        if (i + 0 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i + 0 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j - 1 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j + 0 == tile.ColumnNumber) return true;
+                        if (i + 1 == tile.RowNumber && j + 1 == tile.ColumnNumber) return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
